@@ -42,14 +42,10 @@ class Restaurant extends Component{
         return (
             <div className="restaurant">
                 <div className="restaurant-list">
-                    <h2>Restaurants</h2>
-                    {this.state.restaurants.map((q, ind) =>(
-                        <Restaurant
-                        key={q.id}
-                        name={q.name}
-                        phone={q.phone}
-                        />
-                    ))}
+                    <h2 onClick={() => {this.getRestaurants()}}>Restaurants</h2>
+                    <ul>
+                        {this.state.restaurants}
+                    </ul>
                 </div>
             </div>
         )

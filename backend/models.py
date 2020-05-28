@@ -18,15 +18,17 @@ import json
  -- Version 0.2.0 Creator
      -- Star Schema fixes
      -- Currently only restaurant side active
+ -- Version 0.3.0 Active_Yeast
+     -- created database and succesfully established all databases
 '''
 
 dialect = 'postgresql'
 username = 'postgres'
-password=''
+password='8949'
 host = 'localhost:5432'
-database_name = '' #TODO: Set database name
+database_name = 'picco'
 
-database_path = f'{dialect}://{username}@{host}/{database_name}'
+database_path = f'{dialect}://{username}:{password}@{host}/{database_name}'
 
 db = SQLAlchemy()
 
@@ -54,9 +56,9 @@ class Restaurant(db.Model):
     id =                    Column(Integer, primary_key=True)
     name =                  Column(String(150), nullable=False)
     phone =                 Column(Integer, nullable=False)
-    location    =           db.relationship('location', backref='restaurants', lazy=True)
-    info    =               db.relationship('restaurantinfo', backref='restaurants', lazy=True)
-    menu_items =            db.relationship('menu', backref='restaurants', lazy=True)
+    location    =           db.relationship('Location', backref='restaurants', lazy=True)
+    info    =               db.relationship('RestaurantInfo', backref='restaurants', lazy=True)
+    menu_items =            db.relationship('Menu', backref='restaurants', lazy=True)
 
     def __init__(self, name, phone):
         self.name = name
@@ -84,7 +86,7 @@ class Location(db.Model):
     __tablename__ = 'location'
 
     id =                        Column(Integer, primary_key=True)
-    restaurant_id =             Column(Integer, ForeignKey('restaurant.id'), nullable=False)
+    restaurant_id =             Column(Integer, ForeignKey('restaurants.id'), nullable=False)
     address =                   Column(String, nullable=False)
     city =                      Column(String, nullable=False)
     zipcode =                   Column(Integer)
@@ -122,7 +124,7 @@ class RestaurantInfo(db.Model):
     __tablename__ = 'restaurantinfo'
 
     id =                        Column(Integer, primary_key=True)
-    restaurant_id =             Column(Integer, ForeignKey('restaurant.id'), nullable=False)
+    restaurant_id =             Column(Integer, ForeignKey('restaurants.id'), nullable=False)
     website =                   Column(String(200))
     description =               Column(String)
     classification =            Column(String(100))
@@ -173,10 +175,10 @@ class Menu(db.Model):
     __tablename__ = 'menu'
 
     id =                        Column(Integer, primary_key=True)
-    restaurant_id =             Column(Integer, ForeignKey('restaurant.id'), nullable=False)
+    restaurant_id =             Column(Integer, ForeignKey('restaurants.id'), nullable=False)
     tod_menu =                  Column(Integer, nullable=False)
     name =                      Column(String, nullable=False)
-    menu_items =                db.relationship('menuitems', backref='menu', lazy=True)
+    menu_items =                db.relationship('MenuItems', backref='menu', lazy=True)
 
     def __init__(self, restaurant_id, tod_menu, name):
         self.restaurant_id = restaurant_id
@@ -213,7 +215,7 @@ class MenuItems(db.Model):
     name = Column(String(60), nullable=False)
     description = Column(String(400), nullable=False)
     price = Column(Float, nullable=False)
-    order_item = db.relationship('orderitems', backref='menuitems', lazy=True)
+    order_item = db.relationship('OrderItems', backref='menuitems', lazy=True)
 
     def __init__(self, menu_id, name, description, price, order_item):
         self.menu_id = menu_id
@@ -257,13 +259,13 @@ class Order(db.Model):
     __tablename__ = 'orders'
 
     id =                        Column(Integer, primary_key=True)
-    restaurant_id =             Column(Integer, ForeignKey('restaurant.id'), nullable=False)
+    restaurant_id =             Column(Integer, ForeignKey('restaurants.id'), nullable=False)
     received_timestamp =        Column(TIMESTAMP, nullable=False)
     confirmation_timestamp =    Column(TIMESTAMP)
     complete_timestamp =        Column(TIMESTAMP)
     total_price =               Column(Float, default=0)
-    order_status =              db.relationship('orderstatus', backref='order', lazy=True)
-    order_items =               db.relationship('orderitems', backref='order', lazy=True)
+    order_status =              db.relationship('OrderStatus', backref='orders', lazy=True)
+    order_items =               db.relationship('OrderItems', backref='orders', lazy=True)
 
     def __init__(self, restaurant_id, received_timestamp, confirmation_timestamp, complete_timestamp):
         self.restaurant_id = restaurant_id
@@ -309,7 +311,7 @@ class OrderStatus(db.Model):
     __tablename__ = 'orderstatus'
 
     id =                    Column(Integer, primary_key=True)
-    order_id =              Column(Integer, ForeignKey('order.id'), nullable=False)
+    order_id =              Column(Integer, ForeignKey('orders.id'), nullable=False)
     state =                 Column(Integer, nullable=False)
     ts =                    Column(TIMESTAMP, nullable=False)
 
@@ -348,9 +350,9 @@ class OrderItems(db.Model):
     __tablename__ = 'orderitems'
 
     id =                        Column(Integer, primary_key=True)
-    order_id =                  Column(Integer, ForeignKey('order.id'), nullable=False)
+    order_id =                  Column(Integer, ForeignKey('orders.id'), nullable=False)
     quantity =                  Column(Integer, default=1)
-    menu_item =                 Column(Integer, ForeignKey('menuitem.id'), nullable=False)
+    menu_item =                 Column(Integer, ForeignKey('menuitems.id'), nullable=False)
 
     def __init__(self, order_id, item_id, quantity, menu_item):
         self.order_id = order_id

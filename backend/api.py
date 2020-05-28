@@ -4,24 +4,24 @@ from sqlalchemy import exc
 import json
 from flask_cors import CORS
 import babel
-from datetime import dateutil
+# from datetime import dateutil
 
-from .models import setup_db, Restaurant, Location, Menu, RestaurantInfo, Order, OrderItems, OrderStatus, MenuItems
+from models import setup_db, Restaurant, Location, Menu, RestaurantInfo, Order, OrderItems, OrderStatus, MenuItems
 # from auth.auth import AuthError, requires_auth -> to be implemented after auth0 implementation
 
 RESTAURANTS_PER_PAGE = 10
 
 
-def format_datetime(value, format='medium'):
-    '''
-    function that formats datetime fo the proper format
-    '''
-    date = dateutil.parser.parse(value)
-    if format == 'full':
-        format="EEEE MMMM, d, y 'at' h:mma"
-    elif format == 'medium':
-        format="EE MM, dd, y h:mma"
-    return babel.dates.format_datetime(date, format)
+# def format_datetime(value, format='medium'):
+#     '''
+#     function that formats datetime fo the proper format
+#     '''
+#     date = dateutil.parser.parse(value)
+#     if format == 'full':
+#         format="EEEE MMMM, d, y 'at' h:mma"
+#     elif format == 'medium':
+#         format="EE MM, dd, y h:mma"
+#     return babel.dates.format_datetime(date, format)
 
 def paginate_restaurants(request, selection):
     page = request.args.get('page', 1, type=int)
@@ -45,8 +45,8 @@ def create_app(test_config=None):
         restaurants = Restaurant.query.order_by(Restaurant.id).all()
         current_restaurants = paginate_restaurants(request, restaurants)
 
-        if len(current_restaurants == 0):
-            abort(404)
+        if len(current_restaurants) == 0:
+            print('NO SEARCH RESULTS')
         
         return jsonify({
             'success':True,
@@ -72,6 +72,8 @@ def create_app(test_config=None):
                 'menus':[menu.format() for menu in current_menus],
                 'restaurant_gen_info':restaurant_info.format()
             })
+        except Exception as E:
+            abort(422)
     
     @app.route('/restaurants/search', methods=['POST'])
     def search_restaurants(search_term):
@@ -220,6 +222,8 @@ def create_app(test_config=None):
                 'success':True,
                 'created':menu.id
             })
+        except Exception as E:
+            abort(422)
 
     @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit', methods=['PATCH'])
     def edit_menu(restaurant_id, menu_id):
@@ -331,3 +335,7 @@ def create_app(test_config=None):
     #     response.headers.add('Access-Control-Allow-Headers',
     #                          'GET,PATCH,POST,DELETE,OPTIONS')
     #     return response
+
+
+if __name__ == '__main__':
+    create_app()
