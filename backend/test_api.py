@@ -35,11 +35,38 @@ class PiccoTestCases(unittest.TestCase):
         '''
         pass
 
+
+    def test_insert_restaurant(self):
+        '''
+        Currently testing by inserting a John Doe Case
+        '''
+        res = self.client().post('/restaurants',
+                                 data=json.dumps(self.sample_restaurant),
+                                 content_type='application/json')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        # self.assertIsNotNone(data['restaurant'])
+
     def test_get_all_restaurants(self):
+        '''
+        Currently set to 404 because the database is not populated
+        '''
         res = self.client().get('/restaurants')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertIsInstance(data['restaurants'], list)
+    
+    def test_get_specific_restaurant(self):
+        res = self.client().get('/restaurants/1')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertIsInstance(data['data'], dict)
+    
+    def test_delete_restaurant(self):
+        res = self.client.delete('/questions')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
 
 if __name__ == '__main__':
     unittest.main()

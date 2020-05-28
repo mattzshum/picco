@@ -47,6 +47,7 @@ def create_app(test_config=None):
 
         if len(current_restaurants) == 0:
             print('NO SEARCH RESULTS')
+            abort(404)
         
         return jsonify({
             'success':True,
@@ -122,7 +123,8 @@ def create_app(test_config=None):
             # just need to return restaurant.id for redirect on proper creation
             return jsonify({
                 'success':True,
-                'created':restaurant.id
+                'created':restaurant.id,
+                # 'restaurant':restaurant.format()
             })
         except Exception as E:
             abort(422)
