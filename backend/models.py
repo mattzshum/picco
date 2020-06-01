@@ -2,6 +2,7 @@ import os
 from sqlalchemy import Column, String, Integer, create_engine, ForeignKey, Float, ARRAY, TIMESTAMP
 from flask_sqlalchemy import SQLAlchemy
 import json
+from flask_migrate import Migrate
 
 # Database for Pickos
 
@@ -40,7 +41,8 @@ def setup_db(app, database_path=database_path):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
-    db.create_all()
+    # db.create_all()
+    migrate = Migrate(app, db)
 
 
 class Restaurant(db.Model):
@@ -55,7 +57,7 @@ class Restaurant(db.Model):
 
     id =                    Column(Integer, primary_key=True)
     name =                  Column(String(150), nullable=False)
-    phone =                 Column(Integer, nullable=False)
+    phone =                 Column(String(50), nullable=False)
     location    =           db.relationship('Location', backref='restaurants', lazy=True)
     info    =               db.relationship('RestaurantInfo', backref='restaurants', lazy=True)
     menu_items =            db.relationship('Menu', backref='restaurants', lazy=True)

@@ -6,6 +6,19 @@ from flask_sqlalchemy import SQLAlchemy
 from api import create_app
 from models import setup_db, Restaurant, Location, Menu, RestaurantInfo, Order, OrderItems, OrderStatus, MenuItems
 
+# Unittests for Piccos APIs
+
+# TODO:
+'''
+ -- Create unittests one by one
+'''
+
+# Changelog:
+'''
+ -- Version 0.1.0 Creator
+     -- Init Creation
+'''
+
 class PiccoTestCases(unittest.TestCase):
     '''
     Class containing all API test cases for PICCO
@@ -40,12 +53,17 @@ class PiccoTestCases(unittest.TestCase):
         '''
         Currently testing by inserting a John Doe Case
         '''
-        res = self.client().post('/restaurants',
-                                 data=json.dumps(self.sample_restaurant),
-                                 content_type='application/json')
-        data = json.loads(res.data)
+        ins_restaurant = Restaurant('John Doe', '5103388949')
+        ins_restaurant.insert()
+        restaurant_id = ins_restaurant.id
+        # print(f'INSERTED: {restaurant_id}')
+        ins_location = Location(restaurant_id=restaurant_id, address='1234 John Doe Ave', city='San Francisco', zipcode=94502, state='CA')
+        ins_ri = RestaurantInfo(restaurant_id=restaurant_id, website='website.com', description='John Doe Bakery', classification='type_all', yelp_link='yelp.com/1')
+        ins_location.insert()
+        ins_ri.insert()
+
+        res = self.client().get(f'/restaurants/{restaurant_id}')
         self.assertEqual(res.status_code, 200)
-        # self.assertIsNotNone(data['restaurant'])
 
     def test_get_all_restaurants(self):
         '''
@@ -57,16 +75,40 @@ class PiccoTestCases(unittest.TestCase):
         self.assertIsInstance(data['restaurants'], list)
     
     def test_get_specific_restaurant(self):
-        res = self.client().get('/restaurants/1')
+        ins_restaurant = Restaurant('John Doe', '5103388949')
+        ins_restaurant.insert()
+        restaurant_id = ins_restaurant.id
+        # print(f'INSERTED: {restaurant_id}')
+        ins_location = Location(restaurant_id=restaurant_id, address='1234 John Doe Ave', city='San Francisco', zipcode=94502, state='CA')
+        ins_ri = RestaurantInfo(restaurant_id=restaurant_id, website='website.com', description='John Doe Bakery', classification='type_all', yelp_link='yelp.com/1')
+        ins_location.insert()
+        ins_ri.insert()
+
+        res = self.client().get(f'/restaurants/{restaurant_id}')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertIsInstance(data['data'], dict)
     
     def test_delete_restaurant(self):
-        res = self.client.delete('/questions')
+        '''
+        removes all instances of the above created restaurant objects
+        includes: [restaurant, location, restaurant_info]
+        '''
+        ins_restaurant = Restaurant('John Doe', '5103388949')
+        ins_restaurant.insert()
+        restaurant_id = ins_restaurant.id
+        print(f'INSERTED for DELETION: {restaurant_id}')
+        ins_location = Location(restaurant_id=restaurant_id, address='1234 John Doe Ave', city='San Francisco', zipcode=94502, state='CA')
+        ins_ri = RestaurantInfo(restaurant_id=restaurant_id, website='DELETION', description='John Doe Bakery', classification='type_all', yelp_link='yelp.com/1')
+        ins_location.insert()
+        ins_ri.insert()
+
+        print(ins_ri)
+
+        res = self.client().delete(f'/restaurants/{restaurant_id}')
         data = json.loads(res.data)
-        self.assertEqual(res.status_code, 404)
-        self.assertEqual(data['success'], False)
+        self.assertEqual(res.status_code, 200)
+        # self.assertEqual(data['success'], False)
 
 if __name__ == '__main__':
     unittest.main()

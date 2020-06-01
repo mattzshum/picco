@@ -4,24 +4,25 @@ from sqlalchemy import exc
 import json
 from flask_cors import CORS
 import babel
-# from datetime import dateutil
+# from flask_migrate import Migrate
 
 from models import setup_db, Restaurant, Location, Menu, RestaurantInfo, Order, OrderItems, OrderStatus, MenuItems
 # from auth.auth import AuthError, requires_auth -> to be implemented after auth0 implementation
 
+# API Collection for Pickos
+
+# TODO:
+'''
+ -- Create unittests for all APIs
+'''
+
+# Changelog:
+'''
+ -- Version 0.1.0 Creator
+     -- Instantiated universal APIs. (Not role specific as of yet)
+'''
+
 RESTAURANTS_PER_PAGE = 10
-
-
-# def format_datetime(value, format='medium'):
-#     '''
-#     function that formats datetime fo the proper format
-#     '''
-#     date = dateutil.parser.parse(value)
-#     if format == 'full':
-#         format="EEEE MMMM, d, y 'at' h:mma"
-#     elif format == 'medium':
-#         format="EE MM, dd, y h:mma"
-#     return babel.dates.format_datetime(date, format)
 
 def paginate_restaurants(request, selection):
     page = request.args.get('page', 1, type=int)
@@ -48,16 +49,19 @@ def create_app(test_config=None):
         if len(current_restaurants) == 0:
             print('NO SEARCH RESULTS')
             abort(404)
+
+        # print(current_restaurants)
         
         return jsonify({
             'success':True,
-            'restaurants':[restaurant.format() for restaurant in current_restaurants],
+            'restaurants':current_restaurants,
             'total_restaurants':len(Restaurant.query.all()),
         })
     
     @app.route('/restaurants/<int:restaurant_id>', methods=['GET'])
     def specific_restaurant(restaurant_id):
         try:
+            print(f'CURRENTLY SEARCHING FOR {restaurant_id}')
             restaurant = Restaurant.query.filter(Restaurant.id == restaurant_id).one_or_none()
             location = Location.query.filter(Location.restaurant_id == restaurant_id).one_or_none()
             current_menus = Menu.query.filter(Menu.restaurant_id == restaurant_id).all()
@@ -66,14 +70,23 @@ def create_app(test_config=None):
             if restaurant is None:
                 abort(404)
             
+            if location is None:
+                print(location)
+                print(f'location is None for ID: {restaurant_id}')
+
+            if restaurant_info is None:
+                print(restaurant_info)
+                print('restaurant_info is None')
+
             return jsonify({
                 'success':True,
                 'data':restaurant.format(),
                 'location':location.format(),
-                'menus':[menu.format() for menu in current_menus],
+                'menus':current_menus,
                 'restaurant_gen_info':restaurant_info.format()
             })
         except Exception as E:
+            print(E)
             abort(422)
     
     @app.route('/restaurants/search', methods=['POST'])
@@ -127,22 +140,37 @@ def create_app(test_config=None):
                 # 'restaurant':restaurant.format()
             })
         except Exception as E:
+            print(E)
             abort(422)
     
     @app.route('/restaurants/<int:restaurant_id>', methods=['DELETE'])
     def delete_restaurant(restaurant_id):
         target_restaurant = Restaurant.query.filter(Restaurant.id==restaurant_id).one_or_none()
+        target_location = Location.query.filter(Location.restaurant_id==restaurant_id).one_or_none()
+        target_restaurantinfo = RestaurantInfo.query.filter(RestaurantInfo.restaurant_id==restaurant_id).one_or_none()
+        
+        print(target_restaurantinfo)
         try:
             if target_restaurant is None:
+                print('delete aborted | target_restaurant is None')
+                abort(404)
+            elif target_location is None:
+                print('delete aborted | target_location is None')
+                abort(404)
+            elif target_restaurantinfo is None:
+                print('delete aborted | target_restaurantinfo is None')
                 abort(404)
             
             target_restaurant.delete()
+            target_location.delete()
+            target_restaurantinfo.delete()
 
             return jsonify({
                 'success':True,
                 'deleted':restaurant_id
             })
         except Exception as E:
+            print(E)
             abort(422)
 
     @app.route('/restaurants/<int:restaurant_id>/edit', methods=['PATCH'])
