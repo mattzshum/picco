@@ -145,6 +145,9 @@ def create_app(test_config=None):
     
     @app.route('/restaurants/<int:restaurant_id>', methods=['DELETE'])
     def delete_restaurant(restaurant_id):
+        '''
+        Removes instances where restaurant_id exists in db. Instances in [restaurant, restaurantinfo, location] are all instantiated on restaurant creation so therefore must be deleted
+        '''
         target_restaurant = Restaurant.query.filter(Restaurant.id==restaurant_id).one_or_none()
         target_location = Location.query.filter(Location.restaurant_id==restaurant_id).one_or_none()
         target_restaurantinfo = RestaurantInfo.query.filter(RestaurantInfo.restaurant_id==restaurant_id).one_or_none()
