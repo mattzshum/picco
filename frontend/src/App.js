@@ -8,7 +8,6 @@ import React, { useState, useEffect } from 'react';
 import './stylesheets/App.css';
 import Header from './components/Header'
 import Restaurant from './components/Restaurant';
-// import Restaurant from './components/rest_test';
 
 const App = () => { 
 
@@ -31,10 +30,12 @@ const App = () => {
 
   return (
       <div className="App">
+        <Header />
           <form className='search-form'>
             <input className='search-bar' type='text' />
             <button className='search-button' type='submit'> Search </button>
           </form>
+
           <div className='restaurants'>
             {restaurants && restaurants.map(restaurant =>(
               <Restaurant
@@ -51,6 +52,25 @@ export default App;
 
 
 /*
+
+import {Link} from 'react-router-dom';
+
+// import {
+//   BrowserRouter as Router,
+//   Route,
+//   Switch
+// } from 'react-router-dom';
+
+<Link to='/about'
+
+<Router>
+<Switch>
+<Route path='/' component={Home} />
+<Route path='/restaurants'  component={Restaurant} />
+<Route path='/locations' component={Location} />
+<Route path='/orders' component={Orders} />
+</Switch>
+</Router>
 
 // useEffect() is a function that runs the first time an app is run
 useEffect(() => {
