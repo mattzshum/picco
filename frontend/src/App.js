@@ -1,28 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch
-} from 'react-router-dom';
+// import {
+//   BrowserRouter as Router,
+//   Route,
+//   Switch
+// } from 'react-router-dom';
 
 import './stylesheets/App.css';
 import Header from './components/Header'
 import Restaurant from './components/Restaurant';
-import Restaurant from './rest_test'
+// import Restaurant from './components/rest_test';
 
-function App{
-  const [restaurants, setRestaurants] =([
-      { name: 'Ed', location: '1234 john doe ave'}
-  ])
+const App = () => { 
+
+  // const [restaurants, setRestaurants] =([
+  //     { name: 'Ed', location: '1234 john doe ave'}
+  // ])
+  const [restaurants, setRestaurants] = useState([]);
+
+  useEffect(() => {
+    console.log('getting restaurants');
+    getRestaurants();
+  }, []);
+
+  const getRestaurants = async () => {
+    const response = await fetch('http://127.0.0.1:5000/restaurants').then(res => res.json());
+    console.log(response.restaurants);
+    setRestaurants(response.restaurants)
+    // const data = await response.json(); // NOTE do you need to json here? API already returns json object
+  }
+
   return (
-      <div className="restaurant">
+      <div className="App">
           <form className='search-form'>
             <input className='search-bar' type='text' />
             <button className='search-button' type='submit'> Search </button>
           </form>
-          {restaurants.map(restaurant =>(
-            <Restaurant name={restaurant.name} location={restaurant.location} />
-          ))}
+          <div className='restaurants'>
+            {restaurants && restaurants.map(restaurant =>(
+              <Restaurant
+                key={restaurant.id} 
+                name={restaurant.name}
+                phone={restaurant.phone}/>
+            ))}
+          </div>
       </div>
   )
 }

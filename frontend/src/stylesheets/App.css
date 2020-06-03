@@ -1,39 +1,21 @@
-.App-header {
-    background-color: #222;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    height: 75px;
-    padding: 20px;
-    padding-right: 40%;
-    padding-left: 5%;
-  }
-  
-  .App-header > h1 {
-    color: dodgerblue;
-  }
-  
-  .App-intro {
-    font-size: large;
-  }
-  
-  h2 {
-    text-align: center;
-  }
-  
-  li {
-    text-align: center;
-    margin: 5px 0px;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding-inline-start: 0px;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    margin: auto;
-  }
+.App{
+  min-height: 100vh;
+  background-image: linear-gradient(to top, #c1dfc4 0%, #deecdd 100%);
+}
+
+.search-form{
+  min-height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-bar{
+  width: 50%;
+  border: none;
+  padding: 10px;
+}
+
+.restaurants{
+  margin-left:100px;
+}
