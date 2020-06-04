@@ -61,7 +61,7 @@ import {Link} from 'react-router-dom';
 //   Switch
 // } from 'react-router-dom';
 
-<Link to='/about'
+<Link to='/about' exact />
 
 <Router>
 <Switch>
