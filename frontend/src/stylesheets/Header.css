@@ -18,14 +18,18 @@ header {
 
 .logo-container,.nav-links,.cart{
     display: flex;
+    background-color: #5f5f79;
 }
 
 
 .logo-container{
+    font-size: 18px;
     flex: 1;
 }
 
 .logo{
+    color: #deecdd;
+    justify-content: space-around;
     font-weight: 400;
     margin: 5px;
 }
@@ -39,9 +43,10 @@ nav{
     list-style: none;
 }
 .nav-link{
-    color: #5f5f79;
+    color: #deecdd;
     font-size: 18px;
     text-decoration: none;
+    list-style: none;
 }
 
 .cart{
