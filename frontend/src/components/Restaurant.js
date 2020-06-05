@@ -19,9 +19,9 @@ const Restaurant = () => {
     }
 
     return(
-        <div>
+        <div class='restaurant-display'>
             <div className='restaurants'>
-                <h2>Restaurant</h2>
+                <h2>Restaurants</h2>
                 {restaurants && restaurants.map(restaurant =>(
                     <RestaurantCard
                       key={restaurant.id}

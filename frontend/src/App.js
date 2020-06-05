@@ -11,6 +11,7 @@ import Restaurant from './components/Restaurant';
 import Location from './components/Location';
 import Order from './components/Order';
 import RestaurandDetail from './components/RestaurantDetail'
+import Footer from './components/Footer'
 
 const App = () => { 
 
@@ -23,8 +24,9 @@ const App = () => {
             <Route path='/restaurants' exact component={Restaurant} />
             <Route path='/locations' exact component={Location} />
             <Route path='/orders' exact component={Order} />
-            <Route path='/restaurants/:id>' component={RestaurandDetail} />
+            <Route path='/restaurants/:id' component={RestaurandDetail} />
           </Switch>
+          <Footer />
         </Router>
       </div>
   )
