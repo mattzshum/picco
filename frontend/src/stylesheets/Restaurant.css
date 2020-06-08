@@ -1,9 +1,9 @@
 .restaurant-display{
-    /* background-color:black; */
     height: fit-content;
 }
 
 h2{
-    font-size: 30px;
+    margin-top: 20px;
+    font-size: 40px;
     color:#041b02;
 }

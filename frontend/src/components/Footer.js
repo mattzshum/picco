@@ -8,7 +8,7 @@ class Footer extends Component{
             <div>
                 <div class='phantom'></div>
                 <div class='footer'>
-                    <p>picco footer tester</p>
+                    <p>picco inc.</p>
                 </div>
             </div>
         )

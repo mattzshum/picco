@@ -10,15 +10,11 @@ body {
 
 header {
     display: flex;
-    width:90%;
-    height: 10vh;
-    margin: auto;
-    align-items: center;
 }
 
 .logo-container,.nav-links,.cart{
     display: flex;
-    background-color: #5f5f79;
+    background-color: #232323;
 }
 
 

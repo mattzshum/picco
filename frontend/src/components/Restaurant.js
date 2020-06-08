@@ -16,15 +16,16 @@ const Restaurant = () => {
         console.log(response)
         // console.log(response.restaurants)
         setRestaurants(response.restaurants);
+        console.log(response.restaurants.id)
     }
 
     return(
         <div class='restaurant-display'>
+            <h2 class='title'>Restaurants</h2>
             <div className='restaurants'>
-                <h2>Restaurants</h2>
                 {restaurants && restaurants.map(restaurant =>(
                     <RestaurantCard
-                      key={restaurant.id}
+                      id={restaurant.id}
                       name={restaurant.name}
                       phone={restaurant.phone} />
                 ))}

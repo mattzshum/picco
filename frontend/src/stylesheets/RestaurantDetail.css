@@ -1,0 +1,61 @@
+.rd-container{
+    display: flex;
+}
+
+
+.name{
+    margin-bottom: 15px;
+    animation: drop 1s ease;
+}
+
+.gen-info{
+    display: flex;
+    justify-content: flex-end;
+    display: relative;
+    animation: drop 2s ease;
+}
+
+.external-links{
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    animation: drop 2s ease;
+}
+
+.description{
+    color: black;
+    font-size: 20px;
+    animation: drop 2s ease;
+}
+
+
+
+li {
+    margin-top: 3px;
+}
+
+
+
+
+
+@keyframes slide-right {
+    0%{
+      opacity: 0;
+      transform: translateX(-80px);
+    }
+    100%{
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  }
+
+@keyframes drop{
+    0%{
+        opacity: 0;
+        transform: translateY(-80px);
+    }
+    100%{
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}

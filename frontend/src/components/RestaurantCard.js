@@ -3,11 +3,21 @@ import "../stylesheets/RestaurantCard.css"
 import {Link} from 'react-router-dom';
 
 const RestaurantCard = ({id, name, phone}) => {
+
+    useEffect(() => {
+        console.log(id, name, phone);
+    }, []);
+
     return (
-        <div>
-            <h3>ID: {id}</h3>
-            <Link to={`/restaurants/${id}`}>{name}</Link>
-            <p class='contact-info'>Phone Number: {phone}</p>
+        <div class='container'>
+            <div class='card'>
+                <div class='contentBx'>
+                    <Link to={`/restaurants/${id}`} class='name'>{name}</Link>
+                </div>
+                <div class='phone'>
+                    <span>{phone}</span>
+                </div>
+            </div>
         </div>
     )
 }
